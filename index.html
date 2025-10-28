@@ -1,11 +1,23 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Homework To-Do List</title>
-  <!-- Взимаме SheetJS от CDN -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+
+  <!-- SheetJS от CDNJS -->
+  <script defer src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+  <!-- Резервен CDN (ще се използва само ако първият е блокиран/неуспешен) -->
+  <script>
+    window.addEventListener('error', function(e){
+      if (String(e.message || '').includes('xlsx') && !window.XLSX) {
+        var s = document.createElement('script');
+        s.defer = true;
+        s.src = 'https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js';
+        document.head.appendChild(s);
+      }
+    });
+  </script>
 </head>
 <body>
   <h1>📚 Homework To-Do List</h1>
@@ -21,7 +33,9 @@
   <h2>My Homework</h2>
   <ul id="taskList"></ul>
 
-  <script src="script.js"></script>
+  <!-- Твоят код – зарежда се след XLSX благодарение на defer -->
+  <script defer src="script.js"></script>
 </body>
 </html>
+
 
