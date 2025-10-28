@@ -5,7 +5,7 @@ const addBtn = document.getElementById("addBtn");
 const exportBtn = document.getElementById("exportBtn");
 const taskList = document.getElementById("taskList");
 
-// Днешна дата като минимум
+// Минимална дата = днес
 const todayStr = new Date().toISOString().split("T")[0];
 deadlineInput.min = todayStr;
 deadlineInput.value = todayStr;
@@ -65,20 +65,22 @@ addBtn.addEventListener("click", () => {
   renderTasks();
 });
 
-// Експортиране в JSON файл
+// 📊 Експорт към Excel
 exportBtn.addEventListener("click", () => {
-  const blob = new Blob([JSON.stringify(tasks, null, 2)], { type: "application/json" });
-  const url = URL.createObjectURL(blob);
+  if (tasks.length === 0) {
+    alert("No tasks to export!");
+    return;
+  }
 
-  const a = document.createElement("a");
-  a.href = url;
-  a.download = "homework-tasks.json";
-  document.body.appendChild(a);
-  a.click();
-  document.body.removeChild(a);
+  // Преобразуваме масива в таблица
+  const worksheet = XLSX.utils.json_to_sheet(tasks);
+  const workbook = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(workbook, worksheet, "Homework");
 
-  URL.revokeObjectURL(url);
+  // Сваляме Excel файл
+  XLSX.writeFile(workbook, "homework-tasks.xlsx");
 });
 
 // Първоначално зареждане
 renderTasks();
+
